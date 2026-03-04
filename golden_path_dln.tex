@@ -136,30 +136,35 @@ We assume the $x_i$ to be i.i.d, from the law of large numbers get population lo
 \begin{figure}\label{fig:weakGPH}
     \centering
     \includegraphics[width=\linewidth]{figures/GPH Online Loss Ratio g1.5 Noise 0.0.png}
-    \caption{Weak GPH online regime: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.5$, noise $=0.0$). \textbf{What we want instead: take one seed plot across regimes. First line: online regime across init., second line: ratio online regime. Third and fourth line: offline regime across init. and ratio offline regime. No label noise}}
+    \caption{Weak GPH online regime: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.5$, noise $=0.0$). \textbf{What we want instead: take one seed plot across regimes and one width (e.g. 50 or 100). First row: online regime across initializations, second row: ratio loss SGD/GD (online regime). Third and fourth rows: offline regime across initializations and ratio loss SGD/GD offline regime. Ignore label noise. Include other figures with label noise, other seeds and widths in the appendix (with a similar format).}}
     \label{fig:gph_online}
 \end{figure}
 In each learning dynamics regime and for both online and offline setups we find the the weak GPH holds during a transient regime in figure \ref{fig:weakGPH}. For example in the saddle to saddle regime, we find that the test loss of GD is lower than the test loss of SGD until all the singular values and vectors of the teacher matrix have been learned. After the last plateau, SGD test loss becomes lower than GD test loss. We find similar results in the mean-field and NTK regimes, where the weak GPH holds until the training process converges to a global minimum. This suggests that the implicit biases of SGD only matter at convergence. In the case of a full rank teacher matrix there is a unique global minimum in function space so GD and SGD should both converges to that minimum. It is possible that this is the case in the long run of training but we observe empirically that the test loss of SGD becomes lower than the test loss of GD in finite time before convergence. This could be because at the bottom of the loss landscape diffusion dominates relative to drift induced by the gradient and that SGD can explore lower loss regions than GD faster. In the appendix we show other figures supporting the weak GPH for example varying width and introducing label noise.
 \begin{figure}\label{fig:drift-diffusion-online}
     \centering
     \includegraphics[width=\linewidth]{figures/GPH Online Metrics Noise 0.0.png}
-    \caption{Drift and diffusion: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.5$, noise $=0.0$, batch size $=1$). \textbf{What we want instead: take one seed plot and online regime. First line: test loss, second line: rdrift. Third: Diffusion fourth: ratio drift diffusion; offline regime. No label noise}}
+    \caption{Drift and diffusion: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.5$, noise $=0.0$, batch size $=1$). \textbf{What we want instead: take one seed, one width (e.g. 50 or 100) and online regime. First row: plot test loss; second row: drift; third row: diffusion; fourth row: ratio drift diffusion; each column is a different initialization (saddle to saddle vs mean field vs NTK), no label noise. Include other figures with label noise, other seeds and widths, offline in the appendix (with a similar format and since offline is similar).}}
     \label{fig:gph_online}
 \end{figure}
 
-\begin{figure}\label{fig:drift-diffusion-offline}
-    \centering
-    \includegraphics[width=\linewidth]{figures/GPH Online Metrics Noise 0.0.png}
-    \caption{Drift and diffusion: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.5$, noise $=0.0$, batch size $=1$). \textbf{What we want instead: take one seed plot and online regime. First line: test loss, second line: rdrift. Third: Diffusion fourth: ratio drift diffusion; offline regime. No label noise}}
-    \label{fig:gph_offline}
-\end{figure}
 In both online and offline regimes figures \ref{fig:drift-diffusion-online} and \ref{fig:drift-diffusion-offline} We observe that diffusion dominates much more toward the end of training and on the plateaus for the saddle to saddle regime for both GD and SGD. In particular the drift to diffusion ratio is lower for SGD than for GD at the end of training. This means that SGD will explore region of the loss landscape in which its fraction of diffusion is larger than the regions that GD explores. 
-\section*{GPH in function space}
+\section*{GPH function and parameter spaces}
+A stronger version of GPH is that SGD and GD selects functions that are close in function space (function space GPH). A further strengthening of the GPH is the hypothesis that SGD and GD (or SGD with large batch size) select parameters that are close in parameter space. We investigate both of these hypotheses in DLNs by monitoring the distances in function space and parameter space between the functions selected by GD and SGD across many runs of SGD.
 
-\section*{GPH in parameter space}
-\subsection*{Distance}
-
-\subsection*{Rank Patterns}
+\begin{figure}\label{fig:drift-diffusion-online}
+    \centering
+    \includegraphics[width=\linewidth]{figures/Distances G1.0 Noise0.0 W100.png}
+    \caption{Distance in function and parameter space: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.0$, noise $=0.0$, batch size $=1$). \textbf{TODO: take one seed, one width (e.g. 50 or 100) and online regime. same rows and each column is a different initialization (saddle to saddle vs mean field vs NTK), no label noise. Include other figures with label noise, other seeds and widths, offline in the appendix (with a similar format and since offline is similar).}}
+    \label{fig:gph_online}
+\end{figure}
+\section*{Rank patterns}
+Rank patterns are connected to the complexity of the solutions selected by the learning dynamics. Indeed from the work of \cite{simon} the rank patterns parametrize the orbits of the global minima of the loss landscape under the action of the group $GL_d$ and their codimension is proportional to the local learning coefficient, which is a measure of model complexity \cite{llc}. We test that GD and SGD selects solution with the same singular values of all the partial products of the DLN. We find that the dynamics of the singular values of the partial products of DLNs are similar for GD and SGD across the different regimes of learning dynamics. This suggests that GD and SGD select functions of the same complexity in deep linear networks.
+\begin{figure}\label{fig:drift-diffusion-online}
+    \centering
+    \includegraphics[width=\linewidth]{figures/PP 2.2.png}
+    \caption{Distance in function and parameter space: population loss ratio between SGD and GD trajectories across $N$ SGD trajectories ($\gamma=1.0$, noise $=0.0$, batch size $=1$). \textbf{TODO: take one seed, one width (e.g. 50 or 100) and online regime each column is a different initialization (saddle to saddle vs mean field vs NTK); each row is a different partial product no label noise. Include other figures with label noise, other seeds and widths, offline in the appendix (with a similar format and since offline is similar).}}
+    \label{fig:gph_online}
+\end{figure}
 \section*{Appendix}
 \subsection*{Experimental Setup}
 \end{document}
